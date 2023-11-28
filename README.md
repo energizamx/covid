@@ -1,12 +1,11 @@
 # covid
 Proceso de Tasas de Defunción con Datos Oficiales México
 Estos 2 archivos son las fuentes de datos y Fueron descargados según instrucciones en este canal https://t.me/sinmitos/3077
-diccionario_datos_covid19(1).zip
-Casos_Diarios_Municipio_Defunciones_20230625.csv
-El Script covid.pl va leyendo estos datos y acomoda los casos por municipio, que vienen fecha-casos, fecha-casos durante los 1191 días=3.263 años de acumular casos, para reacomodarlos en forma de registros tipo:  entidad-municipio-casos
-Adicionalmente, en ese mismo registro viene la población municipal, la cual se extrae para crear la tabla de poblacion municipal tipo : clave_municipal-municipio-población-entidad
-La tabla de entidades tipo: clave_entidad-entidad-abreviatura
-Con todo lo anterior generar una tabla nueva en la base de datos llamada Totales, con cada municipio y su total de casos en todos los 1191 días.  
+(1) diccionario_datos_covid19(1).zip
+(2) Casos_Diarios_Municipio_Defunciones_20230625.csv
+El Script (en Perl) covid.pl va leyendo estos datos y acomoda los casos por municipio, que vienen municipio, poblacion, seguido de fecha-casos, fecha-casos... durante los 1191 días (un registro muy largo horizontalmente), que son =3.263 años de acumular casos, para reacomodarlos en forma de registros tipo:  entidad-municipio-casos
+Adicionalmente, en ese mismo registro viene la población municipal, la cual se extrae para crear (1) la tabla de poblacion municipal tipo : clave_municipal-municipio-población-entidad y (2) La tabla de entidades tipo: clave_entidad-entidad-abreviatura
+Con todo lo anterior generar una tabla nueva en la base de datos "covid", tabla llamada Totales, con cada municipio por cada registro y su total de casos en todos los 1191 días.  
 Una tabla adicional llamada pobxent (población por entidad) para poder medir el avance porcentual de acumulación de casos en esa entidad
 Los archivos municipios.sql, entidades.sql, casos.sql, población.sql siempre se están regenerando, pero no tienen cambios, son simples copias de los datos originales, así es que esos ya están cargados en la base de datos.
 Con ellos y con el archivo queries.sql se producen la tabla pobxent y totales, las cuales previamente se limpian con truncate al inicio de queries.sql
@@ -16,13 +15,16 @@ Con tasas_defun.csv en hoja de cálculo se decora el reporte con títulos, color
 Finalmente se exportó toda la base a covid.sql.gz para empaquetarse todo el folder tal como se ve.
 El archivo casos.sql sólo se hizo una vez y se detectaron muchos registros con fecha y cero en esa fecha, se notará el tamaño monstruoso de tal archivo 108 MB y se mantiene este archivo por razones educativas.  No es de hecho malo mantenerlo, es ilustrativo de "no borrar ni los ceros", el registro indica que efectivamente esa fecha en ese municipio no se omitió registro, sino que fue cero.
 Por esa razón se creó casos_no_cero.sql que ya elimina todos esos registros en cero (cero defunciones) y el espacio de trabajo pasa de 108 MB a 5.3 MB
-El mensaje final para los que manejan tantos datos, es acostumbrarse a enviar la base de datos, no hojas de Excel.  Cuando la cantidd de datos es tan grande y estos deben procesarse, trabajar con tablas en bases de datos, es lo más fácil y práctico.  Todo este trabajo que tomó lo que se ve, escasas 2 medias tardes, realmente toma segundos para generar información útil como TASAS de defunción
-De esas 2 medias tardes, la segunda, fue donde se crearon las 3 columnas de tasas estatales y tasa nacional, para poder detectar la tasa MEDIA de defunción de México. 
+En la versión 0.65, se adicionan 3 hash en el script covid.pl llamados %promedios, %min y %max conteniendo la tasa promedio de cada estado, extraído de la tabla tasas_defun.csv, que va midiendo el punto en que cada estado es totalizado al 100% y en ese punto (linea 157 de covid.pl), se guarda en promedio el dato $tasaent (tasa entidad) que se viene recalculando en toda la historia de casos de cada municipio de esa entidad, hasta acumular el total de la población de cada estado.  En ese mismo proceso, se va generando el par de hashes %min y %max, indexados por clave y nombre de cada estado para registrar asi las tasas mínimas y máximas respectivamente.
+Ese cuadro de los 32 estados, su tasa promedio y sus rangos minimo y máximo, así como una nueva tabla muy similar a la de la versión 0.60 con todos los municipios del país, pero reordenados por entidad desde 01 a 32 y ordenando los municipios en orden creciente de tasa e indicando la tasa promedio de cada estado para ubicar qué municipios están por debajo de su media o por encima, así como poder comparar entre estados dónde fueron mayores o menores tasas, ha sido una dificultad constante de poder leer en cualquier informe existente hasta la fecha.
+La conclusión obvia de todo esto es que el covid no fue fatal ni benigno, todo depende de dónde miremos.  Y hay información aún quizá más dramática, cuando repetimos lo anterior, pero de semana a semana, lo que nos permitirá ver que tuvimos lugares con defunciones intensas, muchas por semana a nivel de tasa (lo que significa que pudo ser pueblo chico o grande como ya podemos leer), mientras que también tuvimos muchos otros municipios donde simplemente no pasó nada.  Estudiar por qué en unos no pasó nada y en otros sí, es importantísimo, si realmente quisiéramos comprender causas.
+En la parte técnica, de herramientas de trabajo, el mensaje final para los que manejan tantos datos, es acostumbrarse a manejar y enviar la base de datos, no hojas de Excel.  Cuando la cantidd de datos es tan grande y estos deben procesarse, trabajar con tablas en bases de datos, es lo más fácil y práctico.  Todo este trabajo que tomó lo que se ve, escasas 2 medias tardes, realmente toma segundos para generar información útil como TASAS de defunción
+De esas 2 medias tardes, la segunda tarde, fue donde se crearon las 3 columnas de tasas estatales y tasa nacional, para poder detectar la tasa MEDIA de defunción de México. 
 ¿Por qué?  Si no hay media, no sabemos qué municipio está por arriba o por abajo de la media
 Por qué tasa estatal (media estatal), porque hay estados con tasa media por encima y por abajo de la media nacional
 Y lo mismo para municipios.  Los hay con tasas por debajo de su media estatal o nacional y por encima.
-¿Todo lo anterior nos lleva a la razón central de ese reporte: QUIEN Y PARA QUE SACA PROVECHO de estos números?
+Todo lo anterior nos lleva a la razón central de ese reporte: ¿QUIEN Y PARA QUE SACA PROVECHO de estos números?
 Cualquiera con interes en entender qué pasó y por qué pasó.  
 Aprender de este evento para entender qué causó que ciertos estados y/o municipios, no tuvieran tanta mortandad como otros lugares.  Acaso nos parece importante ¿entender esto?  Acaso nutrición, cultura, ¿genética?  ¿Acaso otros lugares del mundo han estado trabajando en esto?  
 ¿Sabíamos que tratar esto en línea fue tema de censura y cierre de canales de Youtube tildados de desinformadores?
-Como si la ciencia suciediera por decreto o concenso (teorías del cambio climático incuestionable y los invernaderos con lo doble del CO2 atmosférico a 900 PPM resultan producir mucho mejor que a 450 PPM) y nadie tuviera razón para investigar más por razón natural de la ciencia: nunca dejar de investigar.
+Como si la ciencia suciediera por decreto o concenso (teorías del cambio climático se volvieron dogmas incuestionables y mientras los invernaderos con lo doble del CO2 atmosférico a 900 PPM. resultan producir mucho mejor que a 450 PPM), pero pareciera nadie tuviese razón para investigar más, por razón natural de la ciencia: nunca dejar de investigar.
