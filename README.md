@@ -25,4 +25,4 @@ Y lo mismo para municipios.  Los hay con tasas por debajo de su media estatal o 
 Cualquiera con interes en entender qué pasó y por qué pasó.  
 Aprender de este evento para entender qué causó que ciertos estados y/o municipios, no tuvieran tanta mortandad como otros lugares.  Acaso nos parece importante ¿entender esto?  Acaso nutrición, cultura, ¿genética?  ¿Acaso otros lugares del mundo han estado trabajando en esto?  
 ¿Sabíamos que tratar esto en línea fue tema de censura y cierre de canales de Youtube tildados de desinformadores?
-Como si la ciencia suciediera por decreto o concenso (teorías del cambio climático incuestionable y los invernaderos con lo doble del CO2 atmosférico a 900 PPM resultan producir mucho mejor que a 45o PPM) y nadie tuviera razón para investigar más por razón natural de la ciencia: nunca dejar de investigar.
+Como si la ciencia suciediera por decreto o concenso (teorías del cambio climático incuestionable y los invernaderos con lo doble del CO2 atmosférico a 900 PPM resultan producir mucho mejor que a 450 PPM) y nadie tuviera razón para investigar más por razón natural de la ciencia: nunca dejar de investigar.
